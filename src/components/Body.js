@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react'
 import UserList from './UserList';
 import Pagination from './pagination';
 import userData from '../assets/data.json'
-import Shimmer from '../components/Shimmer'
+import Shimmer from './Shimmer'
 
 
 const usersPerPage = 20;
