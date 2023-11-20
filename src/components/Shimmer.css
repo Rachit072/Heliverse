@@ -1,0 +1,38 @@
+
+.shimmer-card {
+    background-color: #f0f0f0; 
+    border-radius: 8px; 
+    padding: 16px;
+    margin-bottom: 16px; 
+  }
+  
+  .shimmer-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .shimmer-line {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    height: 180px;
+    margin-bottom: 8px;
+  }
+  
+  .shimmer-line-short {
+    width: 50%;
+  }
+  
+  .shimmer-line-long {
+    width: 80%;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  

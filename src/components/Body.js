@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import UserList from './UserList';
 import Pagination from './pagination';
+import userData from '../assets/data.json'
+import Shimmer from '../components/Shimmer'
+
+const usersPerPage = 20;
 
 export default function Body() {
     const [users, setUsers] = useState([]);
@@ -8,33 +12,60 @@ export default function Body() {
     const [totalPages, setTotalPages] = useState(1);
     const [searchQuery,setSearchQuery]=useState('');
 
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return function (...args) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+    const fetchData = debounce(() => {
+      try {
+        const filteredUsers = searchQuery
+        ? userData.filter(user =>
+            user.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        : userData;
+
+      const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+      setTotalPages(totalPages);
+
+      const startIndex = (currentPage - 1) * usersPerPage;
+      const endIndex = startIndex + usersPerPage;
+    const usersForCurrentPage = filteredUsers.slice(startIndex, endIndex);
+
+    setUsers(usersForCurrentPage);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },300)
+
     useEffect(() => {
-        fetchData();
-      }, [currentPage, searchQuery]);
+      fetchData();
+    }, [currentPage, searchQuery]);
 
-    const fetchData = async () => {
-        try {
-          const response = await fetch('./src/assets/data.json');
-          const data = await response.json();
-          setUsers(data);
-          setTotalPages(1);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
     function handlePageChange(page){
-        setCurrentPage(page);    
-    }
-
+      setCurrentPage(page);    
+  }
+    
   return (
     <div>
-       <input
+      <div className='search-bar'>
+      <input
         type="text"
         placeholder="Search by name"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <UserList user={users}/>
+      </div>
+      {users.length === 0 ? (<Shimmer/>
+      ): (
+      <UserList users={users}/>)}
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
     </div>
   )

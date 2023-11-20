@@ -1,10 +1,14 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import { render } from 'react-dom';
 import Body from "./components/body"
+import '../index.css';
 
 function App(){
     return <>
         <Body/>
     </>
 }
-ReactDOM.render(<App/>, document.getElementById("root"))
+
+
+const rootElement = document.getElementById('root');
+render(<App />, rootElement);
